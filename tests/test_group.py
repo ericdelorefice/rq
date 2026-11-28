@@ -192,7 +192,9 @@ class TestGroup(RQTestCase):
 
         all_groups = Group.all(self.connection, serializer=JSONSerializer)
         self.assertEqual(len(all_groups), 1)
-        self.assertEqual([job.id for job in all_groups[0].get_jobs()], [jobs[0].id])
+        (job,) = all_groups[0].get_jobs()
+        self.assertEqual(job.id, jobs[0].id)
+        self.assertEqual(job.func_name, 'tests.fixtures.say_hello')
 
     def test_all_deletes_missing_groups(self):
         q = Queue(connection=self.connection)
